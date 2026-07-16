@@ -38,8 +38,26 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" className="bg-background">
-      <body className="antialiased">
+    <html lang="es" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              const stored = localStorage.getItem('theme');
+              const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+              const isDark = stored ? stored === 'dark' : prefersDark;
+              if (isDark) {
+                document.documentElement.classList.add('dark');
+                document.documentElement.classList.remove('light');
+              } else {
+                document.documentElement.classList.add('light');
+                document.documentElement.classList.remove('dark');
+              }
+            `,
+          }}
+        />
+      </head>
+      <body className="bg-background text-foreground antialiased transition-colors duration-300">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

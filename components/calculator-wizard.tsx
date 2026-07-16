@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ArrowLeft, ChevronRight, DollarSign, Calendar, Target, TrendingUp, Users } from 'lucide-react'
+import { ArrowLeft, ChevronRight, DollarSign, Calendar, Target, TrendingUp } from 'lucide-react'
 
 export interface CalculatorData {
   monto: number
@@ -119,27 +119,23 @@ export function CalculatorWizard({ onSubmit, onBack }: CalculatorWizardProps) {
   ]
 
   return (
-    <div className="min-h-screen bg-background transition-colors duration-300 py-12">
-      <div className="container max-w-2xl mx-auto px-4">
-        {/* Header */}
+    <div className="min-h-screen bg-background dark:bg-[radial-gradient(circle_at_top_left,rgba(94,179,246,0.08),transparent_45%),linear-gradient(135deg,#0a1428_0%,#132d5a_100%)] bg-[radial-gradient(circle_at_top_left,rgba(0,59,135,0.08),transparent_45%),linear-gradient(135deg,#f6f9ff_0%,#ffffff_100%)] transition-colors duration-300 py-4 md:py-6">
+      <div className="container max-w-3xl mx-auto px-4">
         <button
           onClick={handleBack}
-          className="inline-flex items-center gap-2 text-primary hover:text-accent transition-colors mb-8 group"
+          className="inline-flex items-center gap-2 text-primary hover:text-accent transition-colors mb-4 group"
         >
           <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           <span className="font-medium">Volver</span>
         </button>
 
-        {/* Card */}
-        <div className="bg-card rounded-2xl p-8 md:p-12 border border-border/50 backdrop-blur hover:border-primary/30 transition-all duration-300 shadow-sm hover:shadow-lg hover:shadow-primary/5">
-          
-          {/* Progress */}
-          <div className="mb-10">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full">
-                PREGUNTA {currentStep + 1} DE {QUESTIONS.length}
+        <div className="rounded-[24px] border border-border/70 bg-card/90 p-5 md:p-7 shadow-[0_24px_80px_-32px_rgba(0,59,135,0.32)] backdrop-blur-xl">
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-primary bg-primary/10 px-3 py-1.5 rounded-full">
+                Pregunta {currentStep + 1} de {QUESTIONS.length}
               </span>
-              <span className="text-sm font-bold text-primary">
+              <span className="text-sm font-semibold text-primary">
                 {Math.round(((currentStep + 1) / QUESTIONS.length) * 100)}%
               </span>
             </div>
@@ -151,14 +147,13 @@ export function CalculatorWizard({ onSubmit, onBack }: CalculatorWizardProps) {
             </div>
           </div>
 
-          {/* Question */}
-          <div className="mb-10 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0">
-                <Icon className="w-6 h-6 text-primary" />
+          <div className="mb-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className="flex items-start gap-3 mb-4">
+              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0 shadow-[0_10px_25px_-18px_rgba(0,59,135,0.45)]">
+                <Icon className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <h2 className="text-3xl font-bold text-foreground mb-2">
+                <h2 className="text-xl sm:text-2xl font-semibold tracking-[-0.02em] text-foreground mb-1">
                   {currentQuestion.title}
                 </h2>
                 <p className="text-muted-foreground">
@@ -167,33 +162,31 @@ export function CalculatorWizard({ onSubmit, onBack }: CalculatorWizardProps) {
               </div>
             </div>
 
-            {/* Question Content */}
-            <div className="space-y-4 mt-8">
-              {/* Monto */}
+            <div className="space-y-3 mt-6">
               {currentQuestion.id === 'monto' && (
                 <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {montoOptions.map(option => (
                       <button
                         key={option.value}
                         onClick={() => handleMontoChange(option.value)}
-                        className={`p-4 rounded-xl border-2 transition-all duration-300 text-left font-semibold ${
+                        className={`p-3 rounded-2xl border transition-all duration-300 text-left font-semibold shadow-sm ${
                           formData.monto === option.value
-                            ? 'border-primary bg-primary/10 text-primary'
-                            : 'border-border/50 hover:border-primary/50 text-foreground hover:bg-muted'
+                            ? 'border-primary bg-primary/10 text-primary shadow-[0_12px_30px_-20px_rgba(0,59,135,0.4)]'
+                            : 'border-border/60 hover:border-primary/50 text-foreground hover:bg-muted/70'
                         }`}
                       >
                         {option.label}
                       </button>
                     ))}
                   </div>
-                  <div className="pt-6 border-t border-border/50">
-                    <p className="text-sm text-muted-foreground mb-4">O ingresa un monto personalizado:</p>
+                  <div className="pt-4 border-t border-border/60">
+                    <p className="text-sm text-muted-foreground mb-3">O ingresa un monto personalizado:</p>
                     <input
                       type="number"
                       value={formData.monto}
                       onChange={(e) => handleMontoChange(Number(e.target.value))}
-                      className="w-full px-4 py-3 rounded-xl border border-border/50 bg-background focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all duration-300 font-bold text-lg"
+                      className="w-full px-4 py-2.5 rounded-2xl border border-border/60 bg-background/80 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all duration-300 font-semibold text-base"
                       placeholder="Ingresa el monto"
                       min="500"
                     />
@@ -201,61 +194,58 @@ export function CalculatorWizard({ onSubmit, onBack }: CalculatorWizardProps) {
                 </div>
               )}
 
-              {/* Plazo */}
               {currentQuestion.id === 'plazo' && (
-                <div className="grid grid-cols-1 gap-3">
+                <div className="grid grid-cols-2 gap-2">
                   {plazoOptions.map(option => (
                     <button
                       key={option.value}
                       onClick={() => setFormData(prev => ({ ...prev, plazo: option.value as any }))}
-                      className={`p-4 rounded-xl border-2 transition-all duration-300 text-left ${
+                      className={`p-3 rounded-xl border transition-all duration-300 text-left shadow-sm ${
                         formData.plazo === option.value
-                          ? 'border-primary bg-primary/10'
-                          : 'border-border/50 hover:border-primary/50 hover:bg-muted'
+                          ? 'border-primary bg-primary/10 shadow-[0_10px_24px_-16px_rgba(0,59,135,0.35)]'
+                          : 'border-border/60 hover:border-primary/50 hover:bg-muted/70'
                       }`}
                     >
-                      <div className="font-semibold text-foreground">{option.label}</div>
-                      <div className="text-sm text-muted-foreground">{option.description}</div>
+                      <div className="font-semibold text-foreground text-sm">{option.label}</div>
+                      <div className="text-xs text-muted-foreground">{option.description}</div>
                     </button>
                   ))}
                 </div>
               )}
 
-              {/* Objetivo */}
               {currentQuestion.id === 'objetivo' && (
-                <div className="grid grid-cols-1 gap-3">
+                <div className="grid grid-cols-2 gap-2">
                   {objetivoOptions.map(option => (
                     <button
                       key={option.value}
                       onClick={() => setFormData(prev => ({ ...prev, objetivo: option.value as any }))}
-                      className={`p-4 rounded-xl border-2 transition-all duration-300 text-left ${
+                      className={`p-3 rounded-xl border transition-all duration-300 text-left shadow-sm ${
                         formData.objetivo === option.value
-                          ? 'border-primary bg-primary/10'
-                          : 'border-border/50 hover:border-primary/50 hover:bg-muted'
+                          ? 'border-primary bg-primary/10 shadow-[0_10px_24px_-16px_rgba(0,59,135,0.35)]'
+                          : 'border-border/60 hover:border-primary/50 hover:bg-muted/70'
                       }`}
                     >
-                      <div className="font-semibold text-foreground">{option.label}</div>
-                      <div className="text-sm text-muted-foreground">{option.description}</div>
+                      <div className="font-semibold text-foreground text-sm">{option.label}</div>
+                      <div className="text-xs text-muted-foreground">{option.description}</div>
                     </button>
                   ))}
                 </div>
               )}
 
-              {/* Perfil de Riesgo */}
               {currentQuestion.id === 'perfil' && (
-                <div className="grid grid-cols-1 gap-3">
+                <div className="grid grid-cols-2 gap-2">
                   {perfilOptions.map(option => (
                     <button
                       key={option.value}
                       onClick={() => setFormData(prev => ({ ...prev, perfil: option.value as any }))}
-                      className={`p-4 rounded-xl border-2 transition-all duration-300 text-left ${
+                      className={`p-3 rounded-xl border transition-all duration-300 text-left shadow-sm ${
                         formData.perfil === option.value
-                          ? 'border-primary bg-primary/10'
-                          : 'border-border/50 hover:border-primary/50 hover:bg-muted'
+                          ? 'border-primary bg-primary/10 shadow-[0_10px_24px_-16px_rgba(0,59,135,0.35)]'
+                          : 'border-border/60 hover:border-primary/50 hover:bg-muted/70'
                       }`}
                     >
-                      <div className="font-semibold text-foreground">{option.label}</div>
-                      <div className="text-sm text-muted-foreground">{option.description}</div>
+                      <div className="font-semibold text-foreground text-sm">{option.label}</div>
+                      <div className="text-xs text-muted-foreground">{option.description}</div>
                     </button>
                   ))}
                 </div>
@@ -263,18 +253,17 @@ export function CalculatorWizard({ onSubmit, onBack }: CalculatorWizardProps) {
             </div>
           </div>
 
-          {/* Buttons */}
-          <div className="flex gap-4 pt-8 border-t border-border/50">
+          <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t border-border/60">
             <button
               onClick={handleBack}
-              className="flex-1 px-6 py-3 rounded-xl border border-border/50 text-foreground font-semibold hover:bg-muted transition-all duration-300"
+              className="flex-1 px-4 py-2.5 rounded-2xl border border-border/60 text-foreground font-semibold hover:bg-muted/70 transition-all duration-300"
             >
               Anterior
             </button>
             <button
               onClick={handleNext}
               disabled={!isStepValid()}
-              className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-accent text-white font-semibold hover:shadow-lg hover:shadow-primary/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 group active:scale-95"
+              className="flex-1 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-primary to-accent text-white font-semibold hover:shadow-[0_16px_40px_-18px_rgba(0,59,135,0.45)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 group active:scale-95"
             >
               {currentStep === QUESTIONS.length - 1 ? 'Ver Recomendación' : 'Siguiente'}
               <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -282,8 +271,7 @@ export function CalculatorWizard({ onSubmit, onBack }: CalculatorWizardProps) {
           </div>
         </div>
 
-        {/* Info */}
-        <div className="mt-8 text-center text-sm text-muted-foreground">
+        <div className="mt-4 text-center text-sm text-muted-foreground">
           <p>
             Tus respuestas nos ayudan a encontrar el producto InterSeguro más adecuado para ti
           </p>
