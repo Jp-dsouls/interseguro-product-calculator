@@ -10,17 +10,13 @@ export function ThemeToggle() {
 
   useEffect(() => {
     setMounted(true)
-    // Check system preference
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
     const stored = localStorage.getItem('theme')
-    
-    if (stored) {
-      setIsDark(stored === 'dark')
-      document.documentElement.classList.toggle('dark', stored === 'dark')
-    } else {
-      setIsDark(prefersDark)
-      document.documentElement.classList.toggle('dark', prefersDark)
-    }
+
+    const initialDark = stored ? stored === 'dark' : prefersDark
+    setIsDark(initialDark)
+    document.documentElement.classList.toggle('dark', initialDark)
+    document.documentElement.classList.toggle('light', !initialDark)
   }, [])
 
   const toggleTheme = () => {
@@ -28,6 +24,7 @@ export function ThemeToggle() {
     setIsDark(newIsDark)
     localStorage.setItem('theme', newIsDark ? 'dark' : 'light')
     document.documentElement.classList.toggle('dark', newIsDark)
+    document.documentElement.classList.toggle('light', !newIsDark)
   }
 
   if (!mounted) return null
