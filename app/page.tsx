@@ -6,23 +6,25 @@ import { CalculatorWizard, type CalculatorData } from '@/components/calculator-w
 import { RecommendationResult } from '@/components/recommendation-result'
 import { ThemeToggle } from '@/components/theme-toggle'
 
-type CalculatorStep = 'landing' | 'wizard' | 'result'
+type AppView = 'landing' | 'result'
 
 export default function Page() {
-  const [step, setStep] = useState<CalculatorStep>('landing')
+  const [view, setView] = useState<AppView>('landing')
+  const [wizardOpen, setWizardOpen] = useState(false)
   const [calculatorData, setCalculatorData] = useState<CalculatorData | null>(null)
 
   const handleStartCalculator = () => {
-    setStep('wizard')
+    setWizardOpen(true)
   }
 
   const handleWizardSubmit = (data: CalculatorData) => {
     setCalculatorData(data)
-    setStep('result')
+    setWizardOpen(false)
+    setView('result')
   }
 
   const handleReset = () => {
-    setStep('landing')
+    setView('landing')
     setCalculatorData(null)
   }
 
@@ -31,19 +33,21 @@ export default function Page() {
       <div className="fixed top-4 right-4 z-50">
         <ThemeToggle />
       </div>
-      {step === 'landing' && <CalculatorLanding onStart={handleStartCalculator} />}
-      {step === 'wizard' && (
-        <CalculatorWizard 
-          onSubmit={handleWizardSubmit}
-          onBack={() => setStep('landing')}
-        />
-      )}
-      {step === 'result' && calculatorData && (
-        <RecommendationResult 
+
+      {view === 'landing' && <CalculatorLanding onStart={handleStartCalculator} />}
+
+      {view === 'result' && calculatorData && (
+        <RecommendationResult
           calculatorData={calculatorData}
           onReset={handleReset}
         />
       )}
+
+      <CalculatorWizard
+        open={wizardOpen}
+        onOpenChange={setWizardOpen}
+        onSubmit={handleWizardSubmit}
+      />
     </main>
   )
 }
