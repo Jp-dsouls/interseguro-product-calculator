@@ -1,9 +1,11 @@
 'use client'
 
-import { CheckCircle, AlertCircle, ExternalLink, ArrowLeft, Award, Zap } from 'lucide-react'
+import { useState } from 'react'
+import { CheckCircle, AlertCircle, ExternalLink, ArrowLeft, Award, Zap, ChevronDown } from 'lucide-react'
 import { calculateRecommendation } from '@/lib/recommendation-engine'
 import type { CalculatorData } from '@/components/calculator-wizard'
 import { Stepper } from '@/components/ui/stepper'
+import { cn } from '@/lib/utils'
 
 interface RecommendationResultProps {
   calculatorData: CalculatorData
@@ -20,6 +22,8 @@ const RESULT_STEPS = [
 
 export function RecommendationResult({ calculatorData, onReset }: RecommendationResultProps) {
   const recommendation = calculateRecommendation(calculatorData)
+  const [progressOpen, setProgressOpen] = useState(false)
+  const [alternativesOpen, setAlternativesOpen] = useState(false)
 
   const formatMonto = (monto: number) => {
     return new Intl.NumberFormat('es-PE', {
@@ -59,58 +63,110 @@ export function RecommendationResult({ calculatorData, onReset }: Recommendation
 
         <div className="rounded-[24px] border border-border/70 bg-card/90 backdrop-blur-xl shadow-[0_24px_80px_-32px_rgba(0,59,135,0.32)] overflow-hidden">
           <div className="flex flex-col md:flex-row min-h-[70vh]">
-            <aside className="md:w-56 lg:w-64 shrink-0 border-b md:border-b-0 md:border-r border-border/60 bg-muted/30 p-5 md:p-6 flex flex-col gap-6">
+            <aside className="md:w-56 lg:w-64 shrink-0 border-b md:border-b-0 md:border-r border-border/60 bg-muted/30 p-4 md:p-6 flex flex-col gap-3 md:gap-6">
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-primary mb-4">
-                  Progreso
-                </p>
-                <Stepper
-                  steps={RESULT_STEPS}
-                  currentStep={RESULT_STEPS.length}
-                  allCompleted
-                />
+                <button
+                  type="button"
+                  onClick={() => setProgressOpen(prev => !prev)}
+                  className="w-full flex items-center justify-between gap-2 md:pointer-events-none"
+                  aria-expanded={progressOpen}
+                >
+                  <div className="text-left">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-primary">
+                      Progreso
+                    </p>
+                    <p className="text-xs text-muted-foreground md:hidden mt-0.5">
+                      5 de 5 pasos completados
+                    </p>
+                  </div>
+                  <ChevronDown
+                    className={cn(
+                      'w-4 h-4 text-primary shrink-0 transition-transform duration-300 md:hidden',
+                      progressOpen && 'rotate-180'
+                    )}
+                  />
+                </button>
+                <div
+                  className={cn(
+                    'overflow-hidden transition-all duration-300 ease-out',
+                    'md:mt-4 md:max-h-none md:opacity-100',
+                    progressOpen ? 'mt-4 max-h-[500px] opacity-100' : 'max-h-0 opacity-0 md:opacity-100'
+                  )}
+                >
+                  <Stepper
+                    steps={RESULT_STEPS}
+                    currentStep={RESULT_STEPS.length}
+                    allCompleted
+                  />
+                </div>
               </div>
 
               {recommendation.alternatives.length > 0 && (
-                <div className="pt-5 border-t border-border/60">
-                  <h3 className="text-sm font-semibold text-foreground mb-3">
-                    Otras opciones que podrían interesarte
-                  </h3>
-                  <div className="flex flex-col gap-2.5">
-                    {recommendation.alternatives.map((alt, idx) => (
-                      <div
-                        key={idx}
-                        className="rounded-xl border border-border/70 bg-card/90 p-3 shadow-sm"
-                      >
-                        <div className="flex items-start justify-between gap-2 mb-1.5">
-                          <h4 className="text-sm font-semibold text-foreground leading-tight">
-                            {alt.product.shortName}
-                          </h4>
-                          <span className="text-sm font-bold text-primary shrink-0">
-                            {formatPercentage(alt.score)}
-                          </span>
-                        </div>
-                        <p className="text-[11px] text-muted-foreground mb-2 line-clamp-2">
-                          {alt.product.description}
-                        </p>
-                        <a
-                          href={alt.product.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-primary hover:text-accent transition-colors font-semibold text-[11px]"
+                <div className="pt-3 md:pt-5 border-t border-border/60">
+                  <button
+                    type="button"
+                    onClick={() => setAlternativesOpen(prev => !prev)}
+                    className="w-full flex items-center justify-between gap-2 md:pointer-events-none"
+                    aria-expanded={alternativesOpen}
+                  >
+                    <div className="text-left">
+                      <h3 className="text-sm font-semibold text-foreground">
+                        Otras opciones que podrían interesarte
+                      </h3>
+                      <p className="text-xs text-muted-foreground md:hidden mt-0.5">
+                        {recommendation.alternatives.length} alternativas
+                      </p>
+                    </div>
+                    <ChevronDown
+                      className={cn(
+                        'w-4 h-4 text-primary shrink-0 transition-transform duration-300 md:hidden',
+                        alternativesOpen && 'rotate-180'
+                      )}
+                    />
+                  </button>
+                  <div
+                    className={cn(
+                      'overflow-hidden transition-all duration-300 ease-out',
+                      'md:mt-3 md:max-h-none md:opacity-100',
+                      alternativesOpen ? 'mt-3 max-h-[800px] opacity-100' : 'max-h-0 opacity-0 md:opacity-100'
+                    )}
+                  >
+                    <div className="flex flex-col gap-2.5">
+                      {recommendation.alternatives.map((alt, idx) => (
+                        <div
+                          key={idx}
+                          className="rounded-xl border border-border/70 bg-card/90 p-3 shadow-sm"
                         >
-                          Conocer más
-                          <ExternalLink className="w-3 h-3" />
-                        </a>
-                      </div>
-                    ))}
+                          <div className="flex items-start justify-between gap-2 mb-1.5">
+                            <h4 className="text-sm font-semibold text-foreground leading-tight">
+                              {alt.product.shortName}
+                            </h4>
+                            <span className="text-sm font-bold text-primary shrink-0">
+                              {formatPercentage(alt.score)}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-muted-foreground mb-2 line-clamp-2">
+                            {alt.product.description}
+                          </p>
+                          <a
+                            href={alt.product.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-primary hover:text-accent transition-colors font-semibold text-[11px]"
+                          >
+                            Conocer más
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}
             </aside>
 
             <div className="flex-1 p-5 md:p-7 lg:p-8">
-              <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-accent/10 p-4 mb-4 backdrop-blur shadow-[0_20px_60px_-28px_rgba(0,59,135,0.32)]">
+              <div className="hidden md:block rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-accent/10 p-4 mb-4 backdrop-blur shadow-[0_20px_60px_-28px_rgba(0,59,135,0.32)]">
                 <div className="flex gap-3 items-start">
                   <Award className="w-6 h-6 text-primary shrink-0 mt-0.5" />
                   <div>
