@@ -13,14 +13,16 @@ interface StepperProps {
   steps: Step[]
   currentStep: number
   className?: string
+  /** Marks every step as completed (e.g. result view) */
+  allCompleted?: boolean
 }
 
-export function Stepper({ steps, currentStep, className }: StepperProps) {
+export function Stepper({ steps, currentStep, className, allCompleted = false }: StepperProps) {
   return (
     <nav className={cn('flex flex-col', className)} aria-label="Progreso del formulario">
       {steps.map((step, index) => {
-        const isCompleted = index < currentStep
-        const isActive = index === currentStep
+        const isCompleted = allCompleted || index < currentStep
+        const isActive = !allCompleted && index === currentStep
         const isLast = index === steps.length - 1
 
         return (
@@ -44,7 +46,7 @@ export function Stepper({ steps, currentStep, className }: StepperProps) {
                 <div
                   className={cn(
                     'w-0.5 flex-1 min-h-8 my-1 transition-colors duration-300',
-                    isCompleted ? 'bg-primary' : 'bg-border'
+                    isCompleted || isActive ? 'bg-primary' : 'bg-border'
                   )}
                 />
               )}

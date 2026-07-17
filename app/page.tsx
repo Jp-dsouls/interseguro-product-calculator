@@ -13,10 +13,6 @@ export default function Page() {
   const [wizardOpen, setWizardOpen] = useState(false)
   const [calculatorData, setCalculatorData] = useState<CalculatorData | null>(null)
 
-  const handleStartCalculator = () => {
-    setWizardOpen(true)
-  }
-
   const handleWizardSubmit = (data: CalculatorData) => {
     setCalculatorData(data)
     setWizardOpen(false)
@@ -34,7 +30,9 @@ export default function Page() {
         <ThemeToggle />
       </div>
 
-      {view === 'landing' && <CalculatorLanding onStart={handleStartCalculator} />}
+      {view === 'landing' && (
+        <CalculatorLanding onStart={() => setWizardOpen(true)} />
+      )}
 
       {view === 'result' && calculatorData && (
         <RecommendationResult

@@ -52,16 +52,30 @@ const QUESTIONS = [
   },
 ]
 
+const INITIAL_DATA: Partial<CalculatorData> = {
+  monto: 5000,
+  plazo: '1año',
+  objetivo: 'ahorro',
+}
+
 export function CalculatorWizard({ open, onOpenChange, onSubmit }: CalculatorWizardProps) {
   const [currentStep, setCurrentStep] = useState(0)
-  const [formData, setFormData] = useState<Partial<CalculatorData>>({
-    monto: 5000,
-    plazo: '1año',
-    objetivo: 'ahorro',
-  })
+  const [formData, setFormData] = useState<Partial<CalculatorData>>(INITIAL_DATA)
 
   const currentQuestion = QUESTIONS[currentStep]
   const Icon = currentQuestion.icon
+
+  const resetWizard = () => {
+    setCurrentStep(0)
+    setFormData(INITIAL_DATA)
+  }
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) {
+      resetWizard()
+    }
+    onOpenChange(nextOpen)
+  }
 
   const handleMontoChange = (value: number) => {
     setFormData(prev => ({ ...prev, monto: value }))
@@ -70,17 +84,19 @@ export function CalculatorWizard({ open, onOpenChange, onSubmit }: CalculatorWiz
   const handleNext = () => {
     if (currentStep < QUESTIONS.length - 1) {
       setCurrentStep(currentStep + 1)
-    } else {
-      onSubmit(formData as CalculatorData)
-      setCurrentStep(0)
+      return
     }
+
+    const data = formData as CalculatorData
+    onSubmit(data)
+    resetWizard()
   }
 
   const handleBack = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1)
     } else {
-      onOpenChange(false)
+      handleOpenChange(false)
     }
   }
 
@@ -124,7 +140,7 @@ export function CalculatorWizard({ open, onOpenChange, onSubmit }: CalculatorWiz
   return (
     <FormModal
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleOpenChange}
       title={currentQuestion.title}
       description={currentQuestion.description}
       steps={STEPS}
