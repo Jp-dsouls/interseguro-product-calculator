@@ -145,8 +145,11 @@ export function CalculatorLanding({ onStart }: CalculatorLandingProps) {
                   <div
                     key={idx}
                     className={cn(
-                      'min-w-[78%] sm:min-w-[60%] md:min-w-0 snap-center rounded-2xl border border-border/60 bg-background/70 p-4 transition-all duration-300 hover:border-primary/30 hover:shadow-[0_14px_35px_-22px_rgba(0,59,135,0.35)] group/item',
-                      activeIndex === idx && 'border-primary/40 shadow-[0_14px_35px_-22px_rgba(0,59,135,0.35)]'
+                      'min-w-[78%] sm:min-w-[60%] md:min-w-0 snap-center rounded-2xl border border-border/60 bg-background/70 p-4 transition-all duration-500 ease-out group/item',
+                      'md:scale-100 md:opacity-90',
+                      activeIndex === idx
+                        ? 'border-primary/40 shadow-[0_14px_35px_-22px_rgba(0,59,135,0.35)] md:scale-105 md:opacity-100 md:shadow-[0_18px_40px_-20px_rgba(0,59,135,0.4)] md:z-10 md:relative'
+                        : 'md:scale-95 md:opacity-70'
                     )}
                   >
                     <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-primary/10 mb-3 group-hover/item:scale-110 transition-transform">
