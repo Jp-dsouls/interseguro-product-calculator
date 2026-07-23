@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { CheckCircle, AlertCircle, ExternalLink, ArrowLeft, Award, Zap, ChevronDown } from 'lucide-react'
+import { CheckCircle, AlertCircle, ExternalLink, ArrowLeft, Award, Zap, ChevronDown, Star } from 'lucide-react'
 import { calculateRecommendation } from '@/lib/recommendation-engine'
 import type { CalculatorData } from '@/components/calculator-wizard'
 import { Stepper } from '@/components/ui/stepper'
@@ -166,25 +166,11 @@ export function RecommendationResult({ calculatorData, onReset }: Recommendation
             </aside>
 
             <div className="flex-1 p-5 md:p-7 lg:p-8">
-              <div className="hidden md:block rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-accent/10 p-4 mb-4 backdrop-blur shadow-[0_20px_60px_-28px_rgba(0,59,135,0.32)]">
-                <div className="flex gap-3 items-start">
-                  <Award className="w-6 h-6 text-primary shrink-0 mt-0.5" />
-                  <div>
-                    <h2 className="text-lg font-semibold text-foreground mb-1">
-                      Hemos encontrado tu producto ideal
-                    </h2>
-                    <p className="text-muted-foreground text-sm">
-                      Basado en tu perfil de inversión personalizado
-                    </p>
-                  </div>
-                </div>
-              </div>
-
               <div className="rounded-2xl border border-border/70 bg-background/40 p-4 md:p-6 mb-4">
                 <div className="grid lg:grid-cols-3 gap-4 mb-4">
                   <div className="lg:col-span-2">
                     <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1.5 rounded-full font-semibold text-sm mb-3">
-                      <Award className="w-4 h-4" />
+                      <Star className="w-4 h-4 fill-primary" />
                       Tu Mejor Opción
                     </div>
                     <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-[-0.03em] text-foreground mb-2">
