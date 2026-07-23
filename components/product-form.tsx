@@ -140,8 +140,19 @@ function renderField(
       {(field.type === 'text' || field.type === 'number' || field.type === 'date') && (
         <input
           type={field.type}
+          inputMode={field.type === 'number' ? 'numeric' : undefined}
           value={formData[field.name] || ''}
           onChange={(e) => handleChange(field.name, e.target.value)}
+          onWheel={field.type === 'number' ? (e) => e.currentTarget.blur() : undefined}
+          onKeyDown={
+            field.type === 'number'
+              ? (e) => {
+                  if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                    e.preventDefault()
+                  }
+                }
+              : undefined
+          }
           placeholder={field.placeholder}
           className={`w-full px-4 py-3 rounded-xl border transition-all duration-300 focus:outline-none font-medium ${
             errors[field.name]

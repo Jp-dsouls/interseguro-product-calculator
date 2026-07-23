@@ -184,8 +184,15 @@ export function CalculatorWizard({ open, onOpenChange, onSubmit }: CalculatorWiz
               <p className="text-xs text-muted-foreground mb-2">O ingresa un monto personalizado:</p>
               <input
                 type="number"
+                inputMode="numeric"
                 value={formData.monto}
                 onChange={(e) => handleMontoChange(Number(e.target.value))}
+                onWheel={(e) => e.currentTarget.blur()}
+                onKeyDown={(e) => {
+                  if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                    e.preventDefault()
+                  }
+                }}
                 className="w-full px-4 py-2.5 rounded-xl border border-border/60 bg-background/80 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all duration-300 font-semibold text-sm"
                 placeholder="Ingresa el monto"
                 min="500"
